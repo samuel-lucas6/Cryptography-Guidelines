@@ -1,5 +1,5 @@
 # Cryptography Guidelines
-![Creative Commons License Icon](http://creativecommons.org/licenses/by-sa/4.0/) This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) because it took bloody ages to write.
+![Creative Commons License Icon](https://i.creativecommons.org/l/by-sa/4.0/88x31.png) This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) because it took bloody ages to write.
 
 ## Background
 This document outlines recommendations for cryptographic algorithm choices and parameters as well as important implementation details based on what I have learnt from reading about the subject and the consensus I have observed online. Note that *some* knowledge of cryptography may be required to understand the terminology used in these guidelines.
