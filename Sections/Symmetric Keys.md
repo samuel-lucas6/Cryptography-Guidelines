@@ -2,7 +2,7 @@
 ## Symmetric Key Size
 
 
-#### Use (not in order because they have different use cases):
+#### Use 「 Unordered | Distinct Use-Cases 」
 
 1. 256-bit keys: there’s essentially no reason not to use 256-bit keys for symmetric encryption. This is the only available key size for most (X)ChaCha20 and (X)Salsa20 implementations, it’s the key size that’s used for [top secret material](https://www.keylength.com/en/6/) by intelligence agencies and governments, and it’s [now recommended](https://www.keylength.com/en/3/) for long-term storage due to concerns surrounding quantum computers being able to bruteforce 128-bit keys.
 
@@ -11,7 +11,7 @@
 
 ---
 
-#### Avoid (in order):
+#### Avoid 「 Ordered 」
 
 1. Smaller than 128-bit keys: this won’t stand the test of time and in some cases can already be bruteforced.
 

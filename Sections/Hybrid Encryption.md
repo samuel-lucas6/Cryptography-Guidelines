@@ -2,7 +2,7 @@
 ## Key Exchange/Hybrid Encryption
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Curve25519/X25519](https://en.wikipedia.org/wiki/Curve25519): popular, fast, easy to implement, fixes some issues with NIST curves, not designed by NIST, and offers ~128-bit security.
 
@@ -13,7 +13,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - [Plain RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), [RSA PKCS#1 v1.5](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), [RSA-KEM](https://en.wikipedia.org/wiki/Key_encapsulation), and [RSA-OAEP](https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding): plain/textbook RSA is **insecure** for [several reasons](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), RSA PKCS#1 v1.5 is also **vulnerable** to some [attacks](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), and RSA-KEM and RSA-OAEP, whilst both secure *when* [implemented correctly](https://paragonie.com/blog/2018/04/protecting-rsa-based-protocols-against-adaptive-chosen-ciphertext-attacks), are still **worse than using hybrid encryption** because asymmetric encryption is slower, designed for small messages, doesn’t provide sender authentication without signatures, and requires larger keys. RSA-KEM is also never used and very rarely available in cryptographic libraries.
 
@@ -30,7 +30,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. Public keys should be shared, and **private keys must be kept secret**: **never** share private keys. Please see point 9 below for details about secure storage of private keys.
 

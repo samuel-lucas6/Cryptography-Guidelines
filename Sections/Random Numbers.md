@@ -2,7 +2,7 @@
 ## Random Numbers
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. The **cryptographically secure** pseudorandom number generator (CSPRNG) in your programming language or cryptographic library: these should use the operating system’s CSPRNG. For example, [RNGCryptoServiceProvider](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.rngcryptoserviceprovider?view=net-5.0) in C#.
 
@@ -11,7 +11,7 @@
 
 ---
 
-#### Avoid (not in order because they’re both bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - A **non-cryptographically secure** pseudorandom number generator: for example, [Math.random()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random) in JavaScript, [Random.Next()](https://docs.microsoft.com/en-us/dotnet/api/system.random.next?view=net-5.0) in C#, [Random()](https://docs.oracle.com/javase/8/docs/api/java/util/Random.html) in Java, and so on. **These are not secure and should not be used for anything related to security**.
 

@@ -2,7 +2,7 @@
 ## (Non-Password-Based) Key Derivation Functions
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Salted BLAKE2b](https://doc.libsodium.org/key_derivation): [restricted](https://www.blake2.net/blake2.pdf) to a 128-bit salt and 128-bit (16 character) personalisation parameter for domain separation, which is annoying. However, you can feed more context information into the message parameter. Besides the weird personal size limit, this is easier to use than HKDF because there’s only one function rather than three, which can be confusing. Furthermore, please see the [Hashing](#hashing) section for why BLAKE2b should be preferred over other hash functions. If there's no KDF variant of BLAKE2b available in your library, then you should probably use HKDF (please see below). However, **if you know what you're doing**, you can construct a BLAKE2b KDF using `BLAKE2b(message: salt || info || saltLength || infoLength, key: inputKeyingMaterial)`, with the `saltLength` and `infoLength` parameters being encoded as specified in point 5 of the [Message Authentication Codes](#message-authentication-codes) Notes section. Like HKDF, this custom approach allows for salt and info parameters of practically any length.
 
@@ -13,7 +13,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - Regular (salted or unsalted) hash functions: whilst this *can* be fine for deriving an encryption key from a Diffie-Hellman shared secret for example, it’s typically **not recommended**. Just use an actual KDF when possible as there’s less that can go wrong (e.g. there's no risk of [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack)).
 
@@ -24,7 +24,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. **These KDFs are not suitable for hashing passwords**: they should be used for deriving multiple subkeys from a **high-entropy** master key or converting a shared secret into a cryptographically strong secret key.
 

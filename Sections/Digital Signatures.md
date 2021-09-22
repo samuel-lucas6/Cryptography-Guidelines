@@ -2,7 +2,7 @@
 ## Digital Signatures
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Ed25519](https://en.wikipedia.org/wiki/EdDSA): very popular, accessible, fast, uses small keys, produces small signatures, deterministic, and offers ~128-bit security.
 
@@ -11,7 +11,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - [Plain RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), [RSA-PKCS#1 v1.5](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), and [RSA-PSS](https://en.wikipedia.org/wiki/Probabilistic_signature_scheme): plain RSA is [insecure](https://crypto.stackexchange.com/questions/20085/which-attacks-are-possible-against-raw-textbook-rsa), RSA-PKCS#1 v1.5 has [no security proof](https://en.wikipedia.org/wiki/Probabilistic_signature_scheme) and is [no longer recommended in the RFC](https://tools.ietf.org/html/rfc8017#section-8), and RSA-PSS is slow for signing and generating keys, produces larger signatures, and requires larger keys than [ECC](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) based signing algorithms. Moreover, RSA has [implementation traps](https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf).
 
@@ -26,7 +26,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. Please read points 1, 2, 9, and 10 of the [Key Exchange/Hybrid Encryption](#key-exchangehybrid-encryption) Notes section because all these points about key pairs/private keys apply for signature algorithms as well.
 

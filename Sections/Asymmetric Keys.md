@@ -2,7 +2,7 @@
 ## Asymmetric Key Size
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. 256-bit keys: the key size for X25519, which provides a ~128-bit security level. Why am I recommending this when I recommend 256-bit keys (a 256-bit security level) for symmetric encryption? Because X25519 is faster, more common, and [more accessible](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Supported_elliptic_curves) than X448. If quantum computers do come along, then [ECC](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) and RSA will be broken regardless of the key size anyway, so many people feel less of a need to use a higher security level curve considering that 128-bit security is currently enough.
 
@@ -13,7 +13,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - 1024-bit keys: these are **no longer secure**.
 

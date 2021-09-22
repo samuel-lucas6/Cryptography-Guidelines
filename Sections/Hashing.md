@@ -2,7 +2,7 @@
 ## Hashing
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing) or [BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing): fast, modern, as [real-world secure](https://eprint.iacr.org/2019/1492.pdf) as SHA3, BLAKE (what BLAKE2 was on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and now quite popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html#name-introduction) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
@@ -15,7 +15,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - **Non-cryptographic** hash functions and error-detecting codes (e.g. [CRC](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)): the clue is in the name. These are **not secure**.
 
@@ -34,7 +34,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. **These hash functions are not suitable for password hashing**: these algorithms are fast, whereas password hashing needs to be slow to prevent [bruteforce attacks](https://en.wikipedia.org/wiki/Password_cracking). Furthermore, password hashing requires using a **random** salt for each password to derive unique hashes when given the same input and to protect against attacks using [precomputed hashes](https://en.wikipedia.org/wiki/Rainbow_table).
 

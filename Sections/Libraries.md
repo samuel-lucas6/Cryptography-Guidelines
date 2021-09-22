@@ -2,7 +2,7 @@
 ## Cryptographic Libraries
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Libsodium](https://doc.libsodium.org/): a modern, extremely fast, easy-to-use, well documented, and [audited](https://www.privateinternetaccess.com/blog/libsodium-v1-0-12-and-v1-0-13-security-assessment/) library that covers all common use cases, except for implementing TLS. However, it’s much bigger than Monocypher, meaning it’s harder to audit and not suitable for constrained environments, and sometimes requires the [Visual C++ Redistributable](https://support.microsoft.com/sl-si/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) to work on Windows.
 
@@ -15,7 +15,7 @@
 
 ---
 
-#### Avoid (in order):
+#### Avoid 「 Ordered 」
 
 1. A random library (with 0 stars) on GitHub: assuming it’s not been written by an experienced professional and it’s not a libsodium or Monocypher [binding](https://github.com/ektrah/nsec) to another programming language, you should generally stay away from unpopular, unaudited libraries. They are much more likely to suffer from vulnerabilities and be significantly slower than the more popular, audited libraries. Also, note that even [experienced professionals make mistakes](https://github.com/agl/ed25519/issues/27).
 
@@ -32,7 +32,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. If the library you’re currently using/planning to use doesn’t support several of the algorithms I’m recommending, then it’s time to upgrade and take advantage of the improved security and performance benefits available to you if you switch.
 

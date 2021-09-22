@@ -2,7 +2,7 @@
 ## Password Hashing/Password-Based Key Derivation
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Argon2id](https://en.wikipedia.org/wiki/Argon2) (64+ MiB of RAM, 3+ iterations, and 1+ parallelism): winner of the [Password Hashing Competition](https://www.password-hashing.net/) in 2015, widely used and recommended now, and very [easy to use](https://doc.libsodium.org/password_hashing/default_phf) in libraries like libsodium. Use as high of a memory size as possible and then as many iterations as possible to reach a suitable delay for your use case (e.g. a delay of 500 milliseconds for server authentication, 1 second for file encryption, 3-5 seconds for disk encryption, etc).
 
@@ -15,7 +15,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - Storing passwords in plaintext: **this is a recipe for disaster**. If your password database is ever compromised, all your users are screwed, and your reputation in terms of security will go down the drain as well.
 
@@ -38,7 +38,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. **Never hard-code passwords into source code**: these can be easily retrieved.
 

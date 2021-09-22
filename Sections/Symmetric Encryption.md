@@ -2,7 +2,7 @@
 ## Symmetric Encryption
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [XChaCha20](https://doc.libsodium.org/advanced/stream_ciphers/xchacha20)-then-[BLAKE2b](https://www.blake2.net/) (Encrypt-then-MAC): **if you know what you are doing**, then implementing Encrypt-then-MAC offers better security than an AEAD because it provides better security properties, such as [key commitment](https://eprint.iacr.org/2020/1491.pdf), and allows for a longer authentication tag, making it more suitable for long-term storage. This combo is now being employed by [PASETO](https://github.com/paragonie/paseto/pull/127), an alternative to [JWT](https://jwt.io/), as well as my file encryption software called [Kryptor](https://www.kryptor.co.uk/). ChaCha20 has a [higher security margin](https://eprint.iacr.org/2019/1492.pdf) than AES whilst also being fast in software and [constant time](https://cr.yp.to/chacha/chacha-20080128.pdf), meaning it’s not vulnerable to timing attacks like AES [can be](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf). Moreover, [Salsa20](https://cr.yp.to/snuffle/salsafamily-20071225.pdf), the cipher ChaCha20 was based on, underwent rigorous analysis as part of the [eSTREAM competition](https://www.ecrypt.eu.org/stream/e2-salsa20.html), and both ChaCha20 and Salsa20 have also received [further analysis](https://en.wikipedia.org/wiki/Salsa20#Cryptanalysis_of_Salsa20) since then.
 
@@ -15,7 +15,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - Your own [custom](https://github.com/Serpent27/PARSEC) symmetric encryption algorithm: even experienced cryptographers design [insecure](https://competitions.cr.yp.to/sha3.html) algorithms, which is why cryptographic algorithms are thoroughly analysed by a large number of cryptanalysts, usually as part of a [competition](https://competitions.cr.yp.to/index.html).
 
@@ -40,7 +40,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. **Never reuse a nonce/IV with the same key (e.g. never hardcode a nonce/IV)**: doing so is **catastrophic** to security. You must either use a counter nonce, a KDF generated nonce/IV, or a randomly generated nonce/IV, depending on the algorithm you’re using. For instance, you should use a counter nonce (e.g. starting with 12 bytes of zeroes) with ChaCha20-Poly1305 and AES-GCM because the small nonce size (64- or 96-bits) means random nonces are **not** safe unless you're encrypting a small amount of data per key, but you can use a random or counter nonce safely with XChaCha20-Poly1305 (192-bits). Then AES-CBC **requires** an unpredictable (aka random) 128-bit IV, and some implementations of AES-CTR need a random nonce too, although most involve using a 64- or 96-bit counter nonce or you have the same problem as with AES-GCM. Note that if you always rotate the key before encrypting (**never** encrypting anything with the same key more than once), then you *can* get away with using a nonce full of zeroes (e.g. 12 bytes of zeroes for AES-GCM), but I generally wouldn’t recommend doing this, especially if you have to use a 128-bit key, which I again **don't** recommend (please see the [Symmetric Key Size](#symmetric-key-size) section), since this can lead to [multi-target attacks](https://blog.cr.yp.to/20151120-batchattacks.html).
 
@@ -85,7 +85,7 @@
 
 ---
 
-#### Discussion:
+#### Discussion
 
 Not everyone will agree with my recommendation to use Encrypt-then-MAC over AEADs when possible for the following reasons:
 

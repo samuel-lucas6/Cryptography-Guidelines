@@ -2,7 +2,7 @@
 ## Message Authentication Codes
 
 
-#### Use (in order):
+#### Use 「 Ordered 」
 
 1. [Keyed BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing) or [keyed BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing): these are faster than HMAC, BLAKE (what BLAKE2 was on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and BLAKE2b provides the [same practical level of security](https://eprint.iacr.org/2019/1492.pdf) as SHA3 whilst also being more popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html#name-introduction) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
@@ -15,7 +15,7 @@
 
 ---
 
-#### Avoid (not in order because they’re all bad):
+#### Avoid 「 Unordered | All Unsuitable 」
 
 - [HMAC-MD5](https://en.wikipedia.org/wiki/HMAC#Security) and [HMAC-SHA1](https://en.wikipedia.org/wiki/HMAC): MD5 and SHA1 should no longer be used for anything.
 
@@ -38,7 +38,7 @@
 
 ---
 
-#### Notes:
+#### Notes
 
 1. **Please read** points 14-17 of the [Symmetric Encryption](#symmetric-encryption) Notes for guidance on implementing a MAC correctly.
 
