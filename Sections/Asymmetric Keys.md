@@ -15,10 +15,10 @@
 
 #### Avoid (not in order because they’re all bad):
 
-1. 1024-bit keys: these are **no longer secure**.
+- 1024-bit keys: these are **no longer secure**.
 
-2. 2048-bit keys: these only provide a 112-bit security level, which is below the standard 128-bit security level. Therefore, whilst commonly used and still safe as a **minimum** RSA key size, it makes sense to use 3072-bit keys instead.
+- 2048-bit keys: these only provide a 112-bit security level, which is below the standard 128-bit security level. Therefore, whilst commonly used and still safe as a **minimum** RSA key size, it makes sense to use 3072-bit keys instead.
 
-3. 8192-bit keys: these are slow to generate and excessive to store.
+- 8192-bit keys: these are slow to generate and excessive to store.
 
-4. Post-quantum algorithm key sizes: these algorithms are still being researched, and the key sizes are very large compared to those for [ECDH](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie%E2%80%93Hellman).
+- Post-quantum algorithm key sizes: these algorithms are still being researched, and the key sizes are very large compared to those for [ECDH](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie%E2%80%93Hellman).

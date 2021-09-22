@@ -15,11 +15,11 @@
 
 #### Avoid (not in order because they’re all bad):
 
-1. Regular (salted or unsalted) hash functions: whilst this *can* be fine for deriving an encryption key from a Diffie-Hellman shared secret for example, it’s typically **not recommended**. Just use an actual KDF when possible as there’s less that can go wrong (e.g. there's no risk of [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack)).
+- Regular (salted or unsalted) hash functions: whilst this *can* be fine for deriving an encryption key from a Diffie-Hellman shared secret for example, it’s typically **not recommended**. Just use an actual KDF when possible as there’s less that can go wrong (e.g. there's no risk of [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack)).
 
-2. Password-based KDFs (e.g. [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2)): if you’re not using a password, then you shouldn’t be using a password-based KDF. Password-based KDFs are designed to be slow to prevent [bruteforce attacks](https://en.wikipedia.org/wiki/Brute-force_attack), whereas non-password-based KDFs are fast because they're designed for high-entropy keys. Even with a small delay (e.g. 1 iteration of PBKDF2), this is likely slower and makes the code more confusing because an inappropriate function is being used.
+- Password-based KDFs (e.g. [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2)): if you’re not using a password, then you shouldn’t be using a password-based KDF. Password-based KDFs are designed to be slow to prevent [bruteforce attacks](https://en.wikipedia.org/wiki/Brute-force_attack), whereas non-password-based KDFs are fast because they're designed for high-entropy keys. Even with a small delay (e.g. 1 iteration of PBKDF2), this is likely slower and makes the code more confusing because an inappropriate function is being used.
 
-3. [HChaCha20](https://doc.libsodium.org/key_derivation#nonce-extension) and [HSalsa20](https://cr.yp.to/snuffle/xsalsa-20110204.pdf): **these are not general-purpose cryptographic hash functions**, can only take a 256-bit key as input and output a 256-bit key, and are very rarely used, except in the case of implementing XChaCha20 and XSalsa20. If you want something based on ChaCha, then use BLAKE2b or BLAKE3.
+- [HChaCha20](https://doc.libsodium.org/key_derivation#nonce-extension) and [HSalsa20](https://cr.yp.to/snuffle/xsalsa-20110204.pdf): **these are not general-purpose cryptographic hash functions**, can only take a 256-bit key as input and output a 256-bit key, and are very rarely used, except in the case of implementing XChaCha20 and XSalsa20. If you want something based on ChaCha, then use BLAKE2b or BLAKE3.
 
 
 ---

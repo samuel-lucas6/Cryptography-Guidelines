@@ -17,23 +17,23 @@
 
 #### Avoid (not in order because they’re all bad):
 
-1. [HMAC-MD5](https://en.wikipedia.org/wiki/HMAC#Security) and [HMAC-SHA1](https://en.wikipedia.org/wiki/HMAC): MD5 and SHA1 should no longer be used for anything.
+- [HMAC-MD5](https://en.wikipedia.org/wiki/HMAC#Security) and [HMAC-SHA1](https://en.wikipedia.org/wiki/HMAC): MD5 and SHA1 should no longer be used for anything.
 
-2. Regular, unencrypted hashes (e.g. `SHA256(ciphertext)`): this is **insecure** because unkeyed hashes don't provide authentication.
+- Regular, unencrypted hashes (e.g. `SHA256(ciphertext)`): this is **insecure** because unkeyed hashes don't provide authentication.
 
-3. Regular, encrypted hashes (e.g. `AES-CTR(SHA256(ciphertext))`): this is **insecure**. For example, with a stream cipher, you could flip bits in the ciphertext hash.
+- Regular, encrypted hashes (e.g. `AES-CTR(SHA256(ciphertext))`): this is **insecure**. For example, with a stream cipher, you could flip bits in the ciphertext hash.
 
-4. `SHA2(key || message)`: this is **vulnerable** to [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack), as discussed in point 3 of the Notes in the [Hashing](#hashing) section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
+- `SHA2(key || message)`: this is **vulnerable** to [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack), as discussed in point 3 of the Notes in the [Hashing](#hashing) section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
 
-5. [Poly1305](https://doc.libsodium.org/advanced/poly1305) and other polynomial MACs: these produce small tags that are designed for online protocols and small messages. They’re also easier to misuse than the recommended algorithms (e.g. Poly1305 requires a secret, unique, and unpredictable key each time that’s independent from the encryption key).
+- [Poly1305](https://doc.libsodium.org/advanced/poly1305) and other polynomial MACs: these produce small tags that are designed for online protocols and small messages. They’re also easier to misuse than the recommended algorithms (e.g. Poly1305 requires a secret, unique, and unpredictable key each time that’s independent from the encryption key).
 
-6. [CBC-MAC](https://en.wikipedia.org/wiki/CBC-MAC): this is unpopular and often [implemented incorrectly](https://blog.cryptographyengineering.com/2013/02/15/why-i-hate-cbc-mac/) because it has [weird requirements](https://en.wikipedia.org/wiki/CBC-MAC#Security_with_fixed_and_variable-length_messages) that most people are completely unaware of, **allowing for attacks**. Even when implemented correctly, the recommended algorithms are better.
+- [CBC-MAC](https://en.wikipedia.org/wiki/CBC-MAC): this is unpopular and often [implemented incorrectly](https://blog.cryptographyengineering.com/2013/02/15/why-i-hate-cbc-mac/) because it has [weird requirements](https://en.wikipedia.org/wiki/CBC-MAC#Security_with_fixed_and_variable-length_messages) that most people are completely unaware of, **allowing for attacks**. Even when implemented correctly, the recommended algorithms are better.
 
-7. [CMAC/OMAC](https://en.wikipedia.org/wiki/One-key_MAC): almost nobody uses this, even though it improves on CBC-MAC in terms of preventing mistakes.
+- [CMAC/OMAC](https://en.wikipedia.org/wiki/One-key_MAC): almost nobody uses this, even though it improves on CBC-MAC in terms of preventing mistakes.
 
-8. 128-bit [keyed hashes](https://doc.libsodium.org/hashing/generic_hashing#usage) or [HMACs](https://en.wikipedia.org/wiki/HMAC): **you shouldn’t go below a 256-bit output** with hash functions because 128-bit security should be the minimum.
+- 128-bit [keyed hashes](https://doc.libsodium.org/hashing/generic_hashing#usage) or [HMACs](https://en.wikipedia.org/wiki/HMAC): **you shouldn’t go below a 256-bit output** with hash functions because 128-bit security should be the minimum.
 
-9. [KMAC](https://en.wikipedia.org/wiki/SHA-3#Additional_instances): whilst more efficient than HMAC-SHA3, it seems to be rarely available. Furthermore, it’s likely that HMAC-SHA3 will be the norm because SHA3 is designed to replace SHA2, which is used with HMAC.
+- [KMAC](https://en.wikipedia.org/wiki/SHA-3#Additional_instances): whilst more efficient than HMAC-SHA3, it seems to be rarely available. Furthermore, it’s likely that HMAC-SHA3 will be the norm because SHA3 is designed to replace SHA2, which is used with HMAC.
 
 
 ---
