@@ -1,5 +1,9 @@
+
 ## Password Hashing/Password-Based Key Derivation
+
+
 #### Use (in order):
+
 1. [Argon2id](https://en.wikipedia.org/wiki/Argon2) (64+ MiB of RAM, 3+ iterations, and 1+ parallelism): winner of the [Password Hashing Competition](https://www.password-hashing.net/) in 2015, widely used and recommended now, and very [easy to use](https://doc.libsodium.org/password_hashing/default_phf) in libraries like libsodium. Use as high of a memory size as possible and then as many iterations as possible to reach a suitable delay for your use case (e.g. a delay of 500 milliseconds for server authentication, 1 second for file encryption, 3-5 seconds for disk encryption, etc).
 
 2. [scrypt](https://en.wikipedia.org/wiki/Scrypt) (N=32768, r=8, p=1 and higher): the parameters are more confusing and less scalable than Argon2, and it’s susceptible to [cache-timing attacks](https://crypto.stanford.edu/cs359c/17sp/projects/MarkAnderson.pdf). However, it’s still a [strong algorithm](https://www.tarsnap.com/scrypt/scrypt.pdf) when configured correctly.
@@ -8,7 +12,11 @@
 
 4. [PBKDF2-SHA512](https://en.wikipedia.org/wiki/PBKDF2) (120,000+ iterations): **only use this when none of the better algorithms are available** or due to compatibility restraints because it can be [efficiently bruteforced](https://www.tarsnap.com/scrypt/scrypt.pdf) using GPUs and ASICs when not using a high iteration count. Note that it’s generally recommended not to ask for more than the output length of the underlying hash function because this can lead to [attacks](https://blog.1password.com/1password-hashcat-strong-master-passwords/). Instead, if that’s required, use PBKDF2 first to get the output length of the underlying hash function (64 bytes with PBKDF2-SHA512) before calling a non-password-based KDF, like HKDF-Expand, with the PBKDF2 output as the input keying material (IKM) to derive more output.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. Storing passwords in plaintext: **this is a recipe for disaster**. If your password database is ever compromised, all your users are screwed, and your reputation in terms of security will go down the drain as well.
 
 2. Using a password as a key (e.g. `key = Encoding.UTF8.GetBytes(password)`): firstly, passwords are low in entropy, whereas **cryptographic keys need to be high in entropy**. Secondly, not using a password-based KDF with a random salt means **attackers can quickly bruteforce passwords** and users using the same password will end up using the same key.
@@ -27,7 +35,11 @@
 
 9. Chaining password hashing functions (e.g. `scrypt(PBKDF2(password))`): **this just reduces the strength of the stronger algorithm** since it means having worse parameters to get the same total delay.
 
+
+---
+
 #### Notes:
+
 1. **Never hard-code passwords into source code**: these can be easily retrieved.
 
 2. **Always use a random 128-bit or 256-bit salt**: salts ensure that each password hash is different, which prevents an attacker from identifying two identical passwords without cracking the hashes. Moreover, salting defends against [attacks](https://en.wikipedia.org/wiki/Password_cracking) that rely on [precomputed hashes](https://en.wikipedia.org/wiki/Rainbow_table). The typical salt size is 128-bits, but 256-bit is also fine for further reassurance that the salt won’t repeat. Anything above that is excessive, and short salts can lead to salt reuse and allow for precomputed attacks, which defeats the point of salting.

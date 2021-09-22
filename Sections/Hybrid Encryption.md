@@ -1,12 +1,20 @@
+
 ## Key Exchange/Hybrid Encryption
+
+
 #### Use (in order):
+
 1. [Curve25519/X25519](https://en.wikipedia.org/wiki/Curve25519): popular, fast, easy to implement, fixes some issues with NIST curves, not designed by NIST, and offers ~128-bit security.
 
 2. [Curve448/X448](https://en.wikipedia.org/wiki/Curve448): less popular and slower than X25519 but provides a 224-bit security level and is also not made by NIST.
 
 3. [Pre-shared symmetric keys](https://en.wikipedia.org/wiki/Pre-shared_key): this approach allows for [post-quantum security](https://media.defense.gov/2021/Aug/04/2002821837/-1/-1/1/Quantum_FAQs_20210804.PDF) and can be combined [alongside](https://www.wireguard.com/protocol/#key-exchange-and-data-packets) an asymmetric key exchange. However, using pre-shared keys can be difficult since the key must be kept secret, whereas public keys are meant to be public and can therefore be easily shared.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. [Plain RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), [RSA PKCS#1 v1.5](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), [RSA-KEM](https://en.wikipedia.org/wiki/Key_encapsulation), and [RSA-OAEP](https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding): plain/textbook RSA is **insecure** for [several reasons](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), RSA PKCS#1 v1.5 is also **vulnerable** to some [attacks](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), and RSA-KEM and RSA-OAEP, whilst both secure *when* [implemented correctly](https://paragonie.com/blog/2018/04/protecting-rsa-based-protocols-against-adaptive-chosen-ciphertext-attacks), are still **worse than using hybrid encryption** because asymmetric encryption is slower, designed for small messages, doesn’t provide sender authentication without signatures, and requires larger keys. RSA-KEM is also never used and very rarely available in cryptographic libraries.
 
 2. [ElGamal](https://en.wikipedia.org/wiki/ElGamal_encryption): old, very rarely used, can only be used on small messages, produces a ciphertext that’s larger than the plaintext, the design is [malleable](https://en.wikipedia.org/wiki/Malleability_%28cryptography)), it's slower than hybrid encryption, and it doesn’t provide sender authentication without signatures.
@@ -19,7 +27,11 @@
 
 6. [Post-quantum algorithms](https://csrc.nist.gov/projects/post-quantum-cryptography): these are still being researched, aren’t implemented in mainstream libraries, are much slower than existing algorithms, and typically have very large key sizes. However, it will eventually make sense to switch to one in the future. For now, if post-quantum security is a goal, then use a pre-shared symmetric key if possible.
 
+
+---
+
 #### Notes:
+
 1. Public keys should be shared, and **private keys must be kept secret**: **never** share private keys. Please see point 9 below for details about secure storage of private keys.
 
 2. **Never hard-code private keys into source code**: these can be easily retrieved.

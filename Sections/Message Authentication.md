@@ -1,5 +1,9 @@
+
 ## Message Authentication Codes
+
+
 #### Use (in order):
+
 1. [Keyed BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing) or [keyed BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing): these are faster than HMAC, BLAKE (what BLAKE2 was on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and BLAKE2b provides the [same practical level of security](https://eprint.iacr.org/2019/1492.pdf) as SHA3 whilst also being more popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html#name-introduction) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
 2. [HMAC-SHA256](https://doc.libsodium.org/advanced/hmac-sha2) or [HMAC-SHA512](https://doc.libsodium.org/advanced/hmac-sha2): slower and older than BLAKE2b but [well-studied](https://en.wikipedia.org/wiki/SHA-2#Cryptanalysis_and_validation). SHA2 is also faster and far more available than SHA3, which has seen somewhat limited adoption so far since SHA2 is still secure.
@@ -8,7 +12,11 @@
 
 4. [Keyed BLAKE3-256](https://github.com/BLAKE3-team/BLAKE3#readme): [faster](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf) than HMAC, BLAKE2b, and SHA3, but it has a [smaller security margin](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf), only targets the [128-bit security level](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf), and hasn't been implemented in many cryptographic libraries yet.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. [HMAC-MD5](https://en.wikipedia.org/wiki/HMAC#Security) and [HMAC-SHA1](https://en.wikipedia.org/wiki/HMAC): MD5 and SHA1 should no longer be used for anything.
 
 2. Regular, unencrypted hashes (e.g. `SHA256(ciphertext)`): this is **insecure** because unkeyed hashes don't provide authentication.
@@ -27,7 +35,11 @@
 
 9. [KMAC](https://en.wikipedia.org/wiki/SHA-3#Additional_instances): whilst more efficient than HMAC-SHA3, it seems to be rarely available. Furthermore, it’s likely that HMAC-SHA3 will be the norm because SHA3 is designed to replace SHA2, which is used with HMAC.
 
+
+---
+
 #### Notes:
+
 1. **Please read** points 14-17 of the [Symmetric Encryption](#symmetric-encryption) Notes for guidance on implementing a MAC correctly.
 
 2. **Please read** point 2 of the [Symmetric Key Size](#symmetric-key-size) Use section for guidance on what key size to use.

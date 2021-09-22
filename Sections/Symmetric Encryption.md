@@ -1,5 +1,9 @@
+
 ## Symmetric Encryption
+
+
 #### Use (in order):
+
 1. [XChaCha20](https://doc.libsodium.org/advanced/stream_ciphers/xchacha20)-then-[BLAKE2b](https://www.blake2.net/) (Encrypt-then-MAC): **if you know what you are doing**, then implementing Encrypt-then-MAC offers better security than an AEAD because it provides better security properties, such as [key commitment](https://eprint.iacr.org/2020/1491.pdf), and allows for a longer authentication tag, making it more suitable for long-term storage. This combo is now being employed by [PASETO](https://github.com/paragonie/paseto/pull/127), an alternative to [JWT](https://jwt.io/), as well as my file encryption software called [Kryptor](https://www.kryptor.co.uk/). ChaCha20 has a [higher security margin](https://eprint.iacr.org/2019/1492.pdf) than AES whilst also being fast in software and [constant time](https://cr.yp.to/chacha/chacha-20080128.pdf), meaning it’s not vulnerable to timing attacks like AES [can be](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf). Moreover, [Salsa20](https://cr.yp.to/snuffle/salsafamily-20071225.pdf), the cipher ChaCha20 was based on, underwent rigorous analysis as part of the [eSTREAM competition](https://www.ecrypt.eu.org/stream/e2-salsa20.html), and both ChaCha20 and Salsa20 have also received [further analysis](https://en.wikipedia.org/wiki/Salsa20#Cryptanalysis_of_Salsa20) since then.
 
 2. [XChaCha20-Poly1305](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305/xchacha20-poly1305_construction): this is the gold standard for when you don’t know how to implement Encrypt-then-MAC or need maximum performance on all devices. As mentioned above, ChaCha20 has a higher security margin than AES, always runs in constant time, and (X)ChaCha20-Poly1305 is faster than AES-GCM without AES-NI hardware support. Note that XChaCha20-Poly1305 should be favoured over regular ChaCha20-Poly1305 in many cases because it allows for random nonces, which helps prevent nonce reuse (please see point 1 of the Notes section). If you just need a counter nonce or intend to use a unique key for encryption each time, then ChaCha20-Poly1305 is fine. Unfortunately, there are two ChaCha20-Poly1305 constructions - the original [ChaCha20-Poly1305](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305/original_chacha20-poly1305_construction) and [ChaCha20-Poly1305-IETF](https://datatracker.ietf.org/doc/html/rfc7539). The original construction is better because it has a smaller nonce, meaning it doesn’t encourage unsafe random nonces, and a larger internal counter, meaning it can encrypt more data using the same key and nonce pair (please see point 5 of the Notes section), but the IETF variant is more popular.
@@ -8,7 +12,11 @@
 
 4. [AES-GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode): the industry standard despite it not being the best and receiving some criticism. It’s easier to use correctly than Encrypt-then-MAC and faster than (X)ChaCha20-BLAKE2b, (X)ChaCha20-Poly1305, and AES-CTR-then-HMAC/AES-CBC-then-HMAC with AES-NI hardware support, but it has a weird nonce size (96-bits) that means you should use a counter nonce, [some](https://pycryptodome.readthedocs.io/en/latest/src/cipher/modern.html#gcm-mode) implementations incorrectly allow 128-bit nonces (**only use a 96-bit nonce** since longer nonces get [hashed](https://soatok.blog/2020/05/13/why-aes-gcm-sucks/), which could result in multiple nonces producing some of the same AES-CTR output), reusing a nonce is more [catastrophic](https://eprint.iacr.org/2016/475.pdf) than in AES-CBC for example, and there are [relatively small](https://doc.libsodium.org/secret-key_cryptography/aead#limitations) max encryption limits (e.g. ~350 GiB for a single key when using 16 KiB long messages). Furthermore, there can be [side-channels](https://eprint.iacr.org/2009/129.pdf) in software implementations and mitigating them [reduces the speed](https://doc.libsodium.org/secret-key_cryptography/aead#aes-256-gcm) of the algorithm. Therefore, AES-GCM should only be used when there’s hardware support, although I strongly recommend the above algorithms instead regardless.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. Your own [custom](https://github.com/Serpent27/PARSEC) symmetric encryption algorithm: even experienced cryptographers design [insecure](https://competitions.cr.yp.to/sha3.html) algorithms, which is why cryptographic algorithms are thoroughly analysed by a large number of cryptanalysts, usually as part of a [competition](https://competitions.cr.yp.to/index.html).
 
 2. [AES-ECB](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_codebook_(ECB)): identical plaintext blocks get encrypted into identical ciphertext blocks, which means the algorithm lacks diffusion and fails to hide data patterns. In other words, it’s **horribly insecure**.
@@ -29,7 +37,11 @@
 
 10. [(X)Salsa20](https://en.wikipedia.org/wiki/Salsa20) and [(X)Salsa20-Poly1305](https://doc.libsodium.org/secret-key_cryptography/secretbox): there’s no reason to use these when (X)ChaCha20 has [better diffusion and performance](https://cr.yp.to/chacha/chacha-20080128.pdf). However, (X)Salsa20 is still [very secure](https://en.wikipedia.org/wiki/Salsa20#Cryptanalysis_of_Salsa20). Also, as mentioned in point 4, you shouldn’t use (X)Salsa20 or (X)ChaCha20 on their own (without a MAC) because **authentication is extremely important**.
 
+
+---
+
 #### Notes:
+
 1. **Never reuse a nonce/IV with the same key (e.g. never hardcode a nonce/IV)**: doing so is **catastrophic** to security. You must either use a counter nonce, a KDF generated nonce/IV, or a randomly generated nonce/IV, depending on the algorithm you’re using. For instance, you should use a counter nonce (e.g. starting with 12 bytes of zeroes) with ChaCha20-Poly1305 and AES-GCM because the small nonce size (64- or 96-bits) means random nonces are **not** safe unless you're encrypting a small amount of data per key, but you can use a random or counter nonce safely with XChaCha20-Poly1305 (192-bits). Then AES-CBC **requires** an unpredictable (aka random) 128-bit IV, and some implementations of AES-CTR need a random nonce too, although most involve using a 64- or 96-bit counter nonce or you have the same problem as with AES-GCM. Note that if you always rotate the key before encrypting (**never** encrypting anything with the same key more than once), then you *can* get away with using a nonce full of zeroes (e.g. 12 bytes of zeroes for AES-GCM), but I generally wouldn’t recommend doing this, especially if you have to use a 128-bit key, which I again **don't** recommend (please see the [Symmetric Key Size](#symmetric-key-size) section), since this can lead to [multi-target attacks](https://blog.cr.yp.to/20151120-batchattacks.html).
 
 2. Prepend the nonce/IV to the ciphertext: this is the recommended approach because it’s read before the ciphertext and doesn't need to be kept secret. However, if you're performing key wrapping (encrypting a key using another key), as described in point 6 below, then you could encrypt the nonce/IV too as an additional layer of protection.
@@ -70,7 +82,11 @@
 
 20. Cascade encryption is unnecessary: although I’ve written a cascade encryption library based on [TripleSec](https://keybase.io/triplesec/) called [DoubleSec](https://github.com/samuel-lucas6/DoubleSec), cascade encryption is significantly slower and solves a problem that pretty much [doesn’t exist](https://blog.cryptographyengineering.com/2012/02/02/multiple-encryption/) because algorithms like ChaCha20 and AES are [nowhere near broken](https://eprint.iacr.org/2019/1492.pdf) and other issues are more likely to cause problems. Furthermore, it’s a hassle to implement yourself compared to using a single algorithm, with more things that can go wrong. Therefore, unless you’re extremely paranoid (e.g. in an Edward Snowden type situation) and don’t care about speed at all, please don’t bother.
 
+
+---
+
 #### Discussion:
+
 Not everyone will agree with my recommendation to use Encrypt-then-MAC over AEADs when possible for the following reasons:
 
 1. It’s easier to implement an AEAD: you don’t need to worry about deriving separate keys, appending and removing the tag, and comparing authentication tags in constant time. AEADs also make it easy to use additional data in the calculation of the tag. This should mean fewer mistakes.

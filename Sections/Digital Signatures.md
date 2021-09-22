@@ -1,10 +1,18 @@
+
 ## Digital Signatures
+
+
 #### Use (in order):
+
 1. [Ed25519](https://en.wikipedia.org/wiki/EdDSA): very popular, accessible, fast, uses small keys, produces small signatures, deterministic, and offers ~128-bit security.
 
 2. [Ed448](https://en.wikipedia.org/wiki/EdDSA#Ed448): less popular and slower than Ed25519 but uses SHAKE256 (a SHA3 variant) instead of SHA512 for hashing and edwards448 instead of edwards25519 for the curve, meaning a 224-bit security level.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. [Plain RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Attacks_against_plain_RSA), [RSA-PKCS#1 v1.5](https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Padding_schemes), and [RSA-PSS](https://en.wikipedia.org/wiki/Probabilistic_signature_scheme): plain RSA is [insecure](https://crypto.stackexchange.com/questions/20085/which-attacks-are-possible-against-raw-textbook-rsa), RSA-PKCS#1 v1.5 has [no security proof](https://en.wikipedia.org/wiki/Probabilistic_signature_scheme) and is [no longer recommended in the RFC](https://tools.ietf.org/html/rfc8017#section-8), and RSA-PSS is slow for signing and generating keys, produces larger signatures, and requires larger keys than [ECC](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) based signing algorithms. Moreover, RSA has [implementation traps](https://crypto.stanford.edu/~dabo/papers/RSA-survey.pdf).
 
 2. [ElGamal](https://en.wikipedia.org/wiki/ElGamal_signature_scheme): old, even slower than RSA, not included in cryptographic libraries, basically not used in any software, not standardised, produces large signatures, and if the message is used directly rather than hashed, as specified in the [original paper](https://caislab.kaist.ac.kr/lecture/2010/spring/cs548/basic/B02.pdf), then that allows for [existential forgery](https://en.wikipedia.org/wiki/ElGamal_signature_scheme#Security).
@@ -15,7 +23,11 @@
 
 5. [Post-quantum algorithms](https://csrc.nist.gov/projects/post-quantum-cryptography): these are still being researched, aren’t implemented in mainstream libraries, are much slower, and typically have very large key sizes. However, it will eventually make sense to switch to one in the future.
 
+
+---
+
 #### Notes:
+
 1. Please read points 1, 2, 9, and 10 of the [Key Exchange/Hybrid Encryption](#key-exchangehybrid-encryption) Notes section because all these points about key pairs/private keys apply for signature algorithms as well.
 
 2. Use authenticated hybrid encryption (an authenticated key exchange with authenticated encryption) instead of encryption with signatures: this is easier to get right and more efficient.

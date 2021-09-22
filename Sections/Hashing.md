@@ -1,5 +1,9 @@
+
 ## Hashing
+
+
 #### Use (in order):
+
 1. [BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing) or [BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing): fast, modern, as [real-world secure](https://eprint.iacr.org/2019/1492.pdf) as SHA3, BLAKE (what BLAKE2 was on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and now quite popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html#name-introduction) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
 2. [SHA512](https://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions), [SHA512/256](https://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions), or [SHA256](https://en.wikipedia.org/wiki/SHA-2#Comparison_of_SHA_functions): SHA2 is the most popular hash function, meaning it’s widely available in cryptographic libraries, it’s still secure besides [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack) (please see point 3 of the Notes section), and it offers decent performance.
@@ -8,7 +12,11 @@
 
 4. [BLAKE3-256](https://github.com/BLAKE3-team/BLAKE3#readme): the [fastest](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf) cryptographic hash in software (assuming you don’t suffer from [performance issues in the main implementation](https://github.com/BLAKE3-team/BLAKE3/issues/31)) at the cost of having a [lower security margin](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf) and being limited to a [128-bit security level](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf). However, it improves on BLAKE2 in that there’s only one variant that covers all use cases (it’s a regular hash, PRF, MAC, KDF, and XOF), but depending on the cryptographic library you use, this isn’t necessarily something you’ll notice when using BLAKE2b anyway.
 
+
+---
+
 #### Avoid (not in order because they’re all bad):
+
 1. **Non-cryptographic** hash functions and error-detecting codes (e.g. [CRC](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)): the clue is in the name. These are **not secure**.
 
 2. [MD5](https://en.wikipedia.org/wiki/MD5) and [SHA1](https://en.wikipedia.org/wiki/SHA-1): both are very old and **no longer secure**. For instance, there’s an [attack](https://eprint.iacr.org/2013/170.pdf) that breaks MD5 collision resistance in 2^18 time. This takes less than a second to execute on an ordinary computer.
@@ -23,7 +31,11 @@
 
 7. 128-bit hashes: you shouldn’t go below a 256-bit output with hash functions to ensure 128-bit security.
 
+
+---
+
 #### Notes:
+
 1. **These hash functions are not suitable for password hashing**: these algorithms are fast, whereas password hashing needs to be slow to prevent [bruteforce attacks](https://en.wikipedia.org/wiki/Password_cracking). Furthermore, password hashing requires using a **random** salt for each password to derive unique hashes when given the same input and to protect against attacks using [precomputed hashes](https://en.wikipedia.org/wiki/Rainbow_table).
 
 2. **These unkeyed hash functions are not suitable for authentication**: you need to use [MACs](https://en.wikipedia.org/wiki/Message_authentication_code) (please see the [Message Authentication Codes](#message-authentication-codes) section), such as keyed BLAKE2b-512 and HMAC-SHA512, for authentication because they provide the [appropriate security guarantees](https://en.wikipedia.org/wiki/Message_authentication_code#Security).
