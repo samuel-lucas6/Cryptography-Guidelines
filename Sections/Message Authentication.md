@@ -51,7 +51,7 @@
 
 - Regular, encrypted hashes (e.g. `AES-CTR(SHA256(ciphertext))`): this is **insecure**. For example, with a stream cipher, you could flip bits in the ciphertext hash.
 
-- `SHA2(key || message)`: this is **vulnerable** to [length extension attacks][ Length Extension Attack ], as discussed in point 3 of the Notes in the [Hashing](#hashing) section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
+- `SHA2(key || message)`: this is **vulnerable** to [length extension attacks][ Length Extension Attack ], as discussed in point 3 of the Notes in the [Hashing](./Hashing.md) section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
 
 - [Poly1305][ Poly1305 ] and other polynomial MACs: these produce small tags that are designed for online protocols and small messages. They’re also easier to misuse than the recommended algorithms (e.g. Poly1305 requires a secret, unique, and unpredictable key each time that’s independent from the encryption key).
 
@@ -68,9 +68,9 @@
 
 #### Notes
 
-1. **Please read** points 14-17 of the [Symmetric Encryption](#symmetric-encryption) Notes for guidance on implementing a MAC correctly.
+1. **Please read** points 14-17 of the [Symmetric Encryption](./Symmetric Encryption.md) Notes for guidance on implementing a MAC correctly.
 
-2. **Please read** point 2 of the [Symmetric Key Size](#symmetric-key-size) Use section for guidance on what key size to use.
+2. **Please read** point 2 of the [Symmetric Key Size](./Symmetric Keys.md) Use section for guidance on what key size to use.
 
 3. A 256-bit authentication tag is sufficient for most use cases: however, a 512-bit tag provides additional security if you’re concerned about quantum computing. I wouldn’t recommend bothering with an output length in-between (e.g. HMAC-SHA384) because that’s not common, and you may as well go all the way to get a 256-bit security level.
 

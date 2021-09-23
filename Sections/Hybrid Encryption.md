@@ -79,9 +79,9 @@
 
 2. **Never hard-code private keys into source code**: these can be easily retrieved.
 
-3. For hybrid encryption, use one of the recommended key exchange algorithms above with one of the recommended [symmetric encryption algorithms](#symmetric-encryption): for example, use X25519 with ChaCha20-Poly1305.
+3. For hybrid encryption, use one of the recommended key exchange algorithms above with one of the recommended [symmetric encryption algorithms](./Symmetric Encryption.md): for example, use X25519 with ChaCha20-Poly1305.
 
-4. Use one of the recommended (non-password-based) KDFs on the shared secret: **shared secrets are not suitable for use as secret keys directly** because they’re not uniformly random. Moreover, you should derive unique keys each time by using the salt and context parameters, as explained in the [(Non-Password-Based) Key Derivation Functions](#non-password-based-key-derivation-functions) section.
+4. Use one of the recommended (non-password-based) KDFs on the shared secret: **shared secrets are not suitable for use as secret keys directly** because they’re not uniformly random. Moreover, you should derive unique keys each time by using the salt and context parameters, as explained in the [(Non-Password-Based) Key Derivation Functions](./Key Derivation - NonPassword.md) section.
 
 5. When using counter nonces for encryption, use different keys for different directions in a client-server scenario: after computing the shared secret, you can use a non-password-based KDF to derive two 256-bit keys as follows: `HKDF-SHA512(inputKeyingMaterial: sharedSecret, outputLength: 64, salt: null, info: clientPublicKey || serverPublicKey)`, splitting the output in two. One key should be used by the client for sending data to the server, and the other should be used by the server for sending data to the client. Both keys need to be calculated by the client and server. This approach allows counter nonces to be used [safely][ Key Exchange ] for encryption without having to wait for an acknowledgement after every message.
 

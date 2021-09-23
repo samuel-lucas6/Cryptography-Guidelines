@@ -57,7 +57,7 @@
 
 - [DSA][ DSA ]: very old, becoming less and less supported, typically used with an [insecure key size][ DSA Insecure Key ], slower than Ed25519, requires larger keys than [ECC][ Elliptic Curves ], and it's not deterministic, which has led to [serious vulnerabilities][ Elliptic Curve Security ] (please see below).
 
-- [ECDSA][ Elliptic Curve Signature ]: slower than Ed25519 and not deterministic, which has led to [serious vulnerabilities][ Elliptic Curve Security ] that affected Sony’s PS3 and Bitcoin, allowing attackers to recover private keys. This issue can be prevented by properly generating a random nonce, which requires having a good [CSPRNG][ Secure Pseudo Random ], or by deriving the nonce deterministically using [something like HMAC][ RFC6979 ]. However, there’s been a shift to Ed25519 because it prevents this issue from happening as well as being better in other respects. Furthermore, there’s also the concern mentioned in the [Key Exchange/Hybrid Encryption](#key-exchangehybrid-encryption) Avoid section that the NIST curves use [unexplained seeds][ RFC8031 ], which is [not a good look][ Bad Look ] considering that [Dual_EC_DRBG][ Dual DRBG ] was a NIST standard despite containing an [NSA backdoor][ NSA Backdoor ].
+- [ECDSA][ Elliptic Curve Signature ]: slower than Ed25519 and not deterministic, which has led to [serious vulnerabilities][ Elliptic Curve Security ] that affected Sony’s PS3 and Bitcoin, allowing attackers to recover private keys. This issue can be prevented by properly generating a random nonce, which requires having a good [CSPRNG][ Secure Pseudo Random ], or by deriving the nonce deterministically using [something like HMAC][ RFC6979 ]. However, there’s been a shift to Ed25519 because it prevents this issue from happening as well as being better in other respects. Furthermore, there’s also the concern mentioned in the [Key Exchange/Hybrid Encryption](./Hybrid Encryption.md) Avoid section that the NIST curves use [unexplained seeds][ RFC8031 ], which is [not a good look][ Bad Look ] considering that [Dual_EC_DRBG][ Dual DRBG ] was a NIST standard despite containing an [NSA backdoor][ NSA Backdoor ].
 
 - [Post-quantum algorithms][ Quantum Cryptography ]: these are still being researched, aren’t implemented in mainstream libraries, are much slower, and typically have very large key sizes. However, it will eventually make sense to switch to one in the future.
 
@@ -66,7 +66,7 @@
 
 #### Notes
 
-1. Please read points 1, 2, 9, and 10 of the [Key Exchange/Hybrid Encryption](#key-exchangehybrid-encryption) Notes section because all these points about key pairs/private keys apply for signature algorithms as well.
+1. Please read points 1, 2, 9, and 10 of the [Key Exchange/Hybrid Encryption](./Hybrid Encryption.md) Notes section because all these points about key pairs/private keys apply for signature algorithms as well.
 
 2. Use authenticated hybrid encryption (an authenticated key exchange with authenticated encryption) instead of encryption with signatures: this is easier to get right and more efficient.
 
