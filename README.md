@@ -163,7 +163,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 ## Message Authentication Codes
 #### Use (in order):
-1. [Keyed BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing) or [keyed BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing): these are faster than HMAC, BLAKE (what BLAKE2 was on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and BLAKE2b provides the [same practical level of security](https://eprint.iacr.org/2019/1492.pdf) as SHA3 whilst also being more popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html#name-introduction) and many [other](https://www.blake2.net/#us) password hashing schemes).
+1. [Keyed BLAKE2b-256](https://doc.libsodium.org/hashing/generic_hashing) or [keyed BLAKE2b-512](https://doc.libsodium.org/hashing/generic_hashing): faster than HMAC, BLAKE (the algorithm BLAKE2 was based on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than Keccak (the SHA3 finalist), as part of the SHA3 competition, and BLAKE2b provides the [same practical level of security](https://eprint.iacr.org/2019/1492.pdf) as SHA3 whilst also being more popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
 2. [HMAC-SHA256](https://doc.libsodium.org/advanced/hmac-sha2) or [HMAC-SHA512](https://doc.libsodium.org/advanced/hmac-sha2): slower and older than BLAKE2b but [well-studied](https://en.wikipedia.org/wiki/SHA-2#Cryptanalysis_and_validation). SHA2 is also faster and far more available than SHA3, which has seen somewhat limited adoption so far since SHA2 is still secure.
 
@@ -178,7 +178,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 3. Regular, encrypted hashes (e.g. `AES-CTR(SHA256(ciphertext))`): this is **insecure**. For example, with a stream cipher, you could flip bits in the ciphertext hash.
 
-4. `SHA2(key || message)`: this is **vulnerable** to [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack), as discussed in point 3 of the Notes in the [Hashing](#hashing) section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
+4. `SHA2(key || message)`: this is **vulnerable** to [length extension attacks](https://en.wikipedia.org/wiki/Length_extension_attack), as discussed in point 3 of the [Hashing](#hashing) Notes section. Technically speaking, `SHA2(message || key)` works as a MAC if the attacker doesn’t know the key, but it’s weaker than constructions like HMAC because it requires the hash function to be collision resistant rather than a pseudorandom function and therefore shouldn’t be used. Newer hash functions, like BLAKE2b, SHA3, and BLAKE3, are resistant to length extension attacks and could be used to perform `Hash(key || message)` safely, but you should still just use a keyed hash function or HMAC instead to do the work for you.
 
 5. [Poly1305](https://doc.libsodium.org/advanced/poly1305) and other polynomial MACs: these produce small tags that are designed for online protocols and small messages. They’re also easier to misuse than the recommended algorithms (e.g. Poly1305 requires a secret, unique, and unpredictable key each time that’s independent from the encryption key).
 
@@ -188,7 +188,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 8. 128-bit [keyed hashes](https://doc.libsodium.org/hashing/generic_hashing#usage) or [HMACs](https://en.wikipedia.org/wiki/HMAC): **you shouldn’t go below a 256-bit output** with hash functions because 128-bit security should be the minimum.
 
-9. [KMAC](https://en.wikipedia.org/wiki/SHA-3#Additional_instances): whilst more efficient than HMAC-SHA3, it seems to be rarely available. Furthermore, it’s likely that HMAC-SHA3 will be the norm because SHA3 is designed to replace SHA2, which is used with HMAC.
+9. [KMAC](https://en.wikipedia.org/wiki/SHA-3#Additional_instances): whilst more efficient than HMAC-SHA3, it seems to be rarely available. Furthermore, it’s likely that HMAC-SHA3 will be the norm because SHA3 is designed to be a drop-in replacement for SHA2, which is used with HMAC.
 
 #### Notes:
 1. **Please read** points 14-17 of the [Symmetric Encryption](#symmetric-encryption) Notes for guidance on implementing a MAC correctly.
@@ -199,7 +199,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 4. Append the authentication tag to the ciphertext: this is common practice and how AEADs operate.
 
-5. Concatenating multiple variable length parameters (e.g. `HMAC(message: additionalData || ciphertext, key: macKey)`) can lead to **attacks**: if you fail to concatenate the lengths of the parameters (e.g. `HMAC(message: additionalData || ciphertext || additionalDataLength || ciphertextLength, key: macKey)`, with the lengths converted to a fixed number of bytes consistently in either big- or little-endian, regardless of the endianness of the machine) or always ensure that they are fixed in size, then your implementation will be susceptible to [canonicalization attacks](https://soatok.blog/2021/07/30/canonicalization-attacks-against-macs-and-signatures/) because an attacker can shift bytes in the different parameters whilst producing a valid authentication tag. AEADs do this length concatenation for you to prevent this.
+5. Concatenating multiple variable length parameters (e.g. `HMAC(message: additionalData || ciphertext, key: macKey)`) can lead to **attacks**: if you fail to concatenate the lengths of the parameters (e.g. `HMAC(message: additionalData || ciphertext || additionalDataLength || ciphertextLength, key: macKey)`, with the lengths converted to a fixed number of bytes consistently in either big- or little-endian, regardless of the endianness of the machine), then your implementation will be susceptible to [canonicalization attacks](https://soatok.blog/2021/07/30/canonicalization-attacks-against-macs-and-signatures/) because an attacker can shift bytes in the different parameters whilst producing a valid authentication tag. AEADs do this length concatenation for you to prevent this.
 
 ## Symmetric Key Size
 #### Use (not in order because they have different use cases):
@@ -208,22 +208,22 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 2. 512-bit keys: if you’re using a MAC like HMAC-SHA512 or keyed BLAKE2b-512, then you should use a 512-bit key. This helps with domain separation when deriving keys, and it’s recommended to always use a key size as large as the output length for HMAC (e.g. a 256-bit key for HMAC-SHA256). This ensures that the key size doesn't decrease the security provided by the MAC.
 
 #### Avoid (in order):
-1. Smaller than 128-bit keys: this won’t stand the test of time and in some cases can already be bruteforced.
+1. Smaller than 128-bit keys: this won’t stand the test of time and in [some cases](https://en.wikipedia.org/wiki/Data_Encryption_Standard#Brute-force_attack) can already be bruteforced.
 
 2. Symmetric encryption algorithms with large key sizes (e.g. [Threefish](https://en.wikipedia.org/wiki/Threefish)): anything over 256-bit is widely regarded as unnecessary. Furthermore, encryption algorithms supporting such key sizes are very unpopular in practice. Note that the situation is different for MACs, as explained in point 2 of the Use section above.
 
-3. 128-bit keys: **this is the minimum**, but please just use 256-bit keys because they provide a higher security margin for an insignificant cost. The [argument](https://blog.1password.com/why-we-moved-to-256-bit-aes-keys/) that AES-128 is more secure than AES-256 due to certain attacks being more effective on AES-256 is incorrect because such attacks are **not** practical in the real world. You should ideally use ChaCha20 instead of AES anyway since it has a higher security margin and runs in constant time, avoiding timing attacks, as explained in the [Symmetric Encryption](#symmetric-encryption) Use section.
+3. 128-bit keys: **this is the minimum**, but please just use 256-bit keys because they provide a higher security margin. The [argument](https://blog.1password.com/why-we-moved-to-256-bit-aes-keys/) that AES-128 is more secure than AES-256 due to certain attacks being more effective on AES-256 is incorrect because such attacks are **not** practical in the real world. You should ideally use ChaCha20 instead of AES anyway since it has a [higher security margin](https://eprint.iacr.org/2019/1492.pdf) and runs in [constant time](https://cr.yp.to/chacha/chacha-20080128.pdf), avoiding [timing attacks](https://cr.yp.to/antiforgery/cachetiming-20050414.pdf), as explained in the [Symmetric Encryption](#symmetric-encryption) Use section.
 
 ## Random Numbers
 #### Use (in order):
-1. The **cryptographically secure** pseudorandom number generator (CSPRNG) in your programming language or cryptographic library: these should use the operating system’s CSPRNG. For example, [RNGCryptoServiceProvider](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.rngcryptoserviceprovider?view=net-5.0) in C#.
+1. The **cryptographically secure** pseudorandom number generator ([CSPRNG](https://en.wikipedia.org/wiki/Cryptographically-secure_pseudorandom_number_generator)) in your programming language or cryptographic library: these should use the CSPRNG in your operating system. For example, [RandomNumberGenerator()](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.randomnumbergenerator?view=net-5.0) in C# and [SecureRandom()](https://docs.oracle.com/javase/8/docs/api/java/security/SecureRandom.html) in Java.
 
-2. [Fast key erasure](https://blog.cr.yp.to/20170723-random.html) **on embedded systems**: this should be **a last resort** because it’s hard to erase keys properly. **A lot can go wrong if you don’t know what you’re doing**. [Here's](https://github.com/WebAssembly/wasi-libc/blob/main/libc-top-half/sources/arc4random.c) an example ChaCha20 RNG implementation.
+2. [Fast key erasure](https://blog.cr.yp.to/20170723-random.html) **on embedded systems**: this should be **a last resort** because it’s hard to erase keys properly. **A lot can go wrong if you don’t know what you’re doing**. Ideally, allow a library like [LibHydrogen](https://github.com/jedisct1/libhydrogen) to handle random number generation on embedded devices for you. However, if you must implement this yourself, [here](https://github.com/WebAssembly/wasi-libc/blob/main/libc-top-half/sources/arc4random.c) is an example ChaCha20 RNG implementation.
 
 #### Avoid (not in order because they’re both bad):
 1. A **non-cryptographically secure** pseudorandom number generator: for example, [Math.random()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random) in JavaScript, [Random.Next()](https://docs.microsoft.com/en-us/dotnet/api/system.random.next?view=net-5.0) in C#, [Random()](https://docs.oracle.com/javase/8/docs/api/java/util/Random.html) in Java, and so on. **These are not secure and should not be used for anything related to security**.
 
-2. A custom RNG: this is **likely** going to be **insecure** because it’s harder to do properly than you’d think. **Just trust the operating system’s CSPRNG**.
+2. A custom RNG: this is **likely** going to be **insecure** because it’s harder to do properly than you’d think. **Just trust the CSPRNG in your operating system**.
 
 ## Hashing
 #### Use (in order):
