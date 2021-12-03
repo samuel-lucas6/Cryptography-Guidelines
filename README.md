@@ -172,7 +172,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 ## Message Authentication Codes
 #### Use (in order):
-1. [Keyed BLAKE2b-256](https://www.blake2.net/) or [keyed BLAKE2b-512](https://www.blake2.net/): BLAKE2b provides a [similar amount of security](https://eprint.iacr.org/2019/1492.pdf) to SHA3 whilst also being faster than SHA2 and SHA3. Furthermore, BLAKE (the algorithm BLAKE2 was based on) received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than [Keccak](https://keccak.team/keccak.html) (the SHA3 finalist), as part of the [SHA3 competition](https://competitions.cr.yp.to/sha3.html). Lastly, it's available in [many](https://www.blake2.net/#us) cryptographic libraries and has become increasingly popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html) and many [other](https://www.blake2.net/#us) password hashing schemes).
+1. [Keyed BLAKE2b-256](https://www.blake2.net/) or [keyed BLAKE2b-512](https://www.blake2.net/): BLAKE2b provides a [similar amount of security](https://eprint.iacr.org/2019/1492.pdf) to SHA3 whilst also being faster than SHA2 and SHA3. Furthermore, BLAKE2 relies on essentially the same core algorithm as BLAKE, which received a [significant amount of cryptanalysis](https://nvlpubs.nist.gov/nistpubs/ir/2012/NIST.IR.7896.pdf), even more than [Keccak](https://keccak.team/keccak.html) (the SHA3 finalist), as part of the [SHA3 competition](https://competitions.cr.yp.to/sha3.html). Lastly, it's available in [many](https://www.blake2.net/#us) cryptographic libraries and has become increasingly popular in software (e.g. it’s used in [Argon2](https://www.rfc-editor.org/rfc/rfc9106.html) and many [other](https://www.blake2.net/#us) password hashing schemes).
 
 2. [HMAC-SHA256](https://doc.libsodium.org/advanced/hmac-sha2) or [HMAC-SHA512](https://doc.libsodium.org/advanced/hmac-sha2): slower and older than BLAKE2 but [well-studied](https://en.wikipedia.org/wiki/SHA-2#Cryptanalysis_and_validation). HMAC-SHA2 is also faster than SHA3, extremely popular in software, and available in about every cryptographic library. However, unlike BLAKE, BLAKE2, BLAKE3, and SHA3, SHA2 was designed behind closed doors at the NSA rather than the result of an open competition, with [no design rationale](https://keccak.team/2017/open_source_crypto.html) in the standard.
 
@@ -211,6 +211,14 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 4. Append the authentication tag to the ciphertext: this is common practice and how AEADs operate.
 
 5. Concatenating multiple variable length parameters (e.g. `HMAC(message: additionalData || ciphertext, key: macKey)`) can lead to **attacks**: if you fail to concatenate the lengths of the parameters (e.g. `HMAC(message: additionalData || ciphertext || additionalDataLength || ciphertextLength, key: macKey)`, with the lengths converted to a fixed number of bytes, such as 4 bytes to represent an integer, consistently in either big- or little-endian, regardless of the endianness of the machine), then your implementation will be susceptible to [canonicalization attacks](https://soatok.blog/2021/07/30/canonicalization-attacks-against-macs-and-signatures/) because an attacker can shift bytes in the different parameters whilst producing a valid authentication tag. AEADs do this length concatenation for you to prevent this.
+
+#### Discussion:
+Despite SHA3 being the new standard, it's hard to recommend over HMAC-SHA2 for the following reasons:
+- There's currently nothing wrong with HMAC-SHA2.
+- HMAC-SHA2 is widely available.
+- The different variants are a mess, with some being less available in cryptographic libraries.
+- It's slower.
+- HMAC-SHA3, which is considerably easier to use than doing concatenation yourself, is unnecessarily inefficient, making it even slower.
 
 ## Symmetric Key Size
 #### Use (not in order because they have different use cases):
