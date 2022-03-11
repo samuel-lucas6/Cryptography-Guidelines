@@ -161,7 +161,7 @@ Not everyone will agree with my recommendation to use Encrypt-then-MAC over AEAD
 
 My response to these arguments is:
 
-1. Yes, AEADs are simpler, which is exactly why we need committing AEADs (e.g. [AEGIS](https://eprint.iacr.org/2013/695.pdf) and [Rocca](https://tosc.iacr.org/index.php/ToSC/article/view/8904/8480)) and Encrypt-then-MAC implementations to be standardised and included in cryptographic libraries. Unfortunately, this isn’t happening because everyone is busy promoting non-committing AEADs.
+1. Yes, AEADs are simpler, which is exactly why we need committing AEADs (e.g. [AEGIS](https://competitions.cr.yp.to/round3/aegisv11.pdf) and [Rocca](https://tosc.iacr.org/index.php/ToSC/article/view/8904/8480)) and Encrypt-then-MAC implementations to be standardised and included in cryptographic libraries. Unfortunately, this isn’t happening because everyone is busy promoting non-committing AEADs.
 
 2. Whilst this is often true, except for AEADs like AES-GCM without AES-NI support, Encrypt-then-MAC, especially using MACs like BLAKE2b and BLAKE3, is not slow enough for this to be considered a serious problem, particularly in non-interactive/offline scenarios or when dealing with long-term storage. In fact, using BLAKE3 with a large enough amount of data can be faster than Poly1305 and GMAC. Moreover, I would argue that the additional security makes up for any loss in speed. AEADs are not designed for long-term storage, as indicated by the small nonces and tags, whereas Encrypt-then-MAC is.
 
