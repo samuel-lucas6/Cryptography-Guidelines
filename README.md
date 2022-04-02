@@ -455,7 +455,7 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 ## Asymmetric Key Size
 #### Use (in order):
-1. 256-bit keys: the key size for X25519, which provides a ~128-bit security level. Why am I recommending this when I recommend 256-bit keys (a 256-bit security level) for symmetric encryption? Because 128-bit security means [something different](https://github.com/LoupVaillant/Monocypher/issues/127#issuecomment-536200435) in the case of these asymmetric algorithms. Furthermore, X25519 is faster, more common, and [more accessible](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Supported_elliptic_curves) than X448. Finally, if quantum computers do come along, then [ECC](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) and RSA will be broken regardless of the key size anyway, so many people feel less of a need to use a higher security level curve.
+1. 256-bit keys: the key size for X25519, which provides a ~128-bit security level. Why am I recommending this when I recommend 256-bit keys (a 256-bit security level) for symmetric encryption? Because 128-bit security means [something different](https://github.com/LoupVaillant/Monocypher/issues/127#issuecomment-536200435) in the case of these asymmetric algorithms. Furthermore, X25519 is faster, more common, and [more accessible](https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations#Supported_elliptic_curves) than X448. Finally, when quantum computers do come along, [ECC](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography) and RSA will be broken regardless of the key size anyway, so many people feel less of a need to use a higher security level curve.
 
 2. 456-bit keys: the key size for X448, which provides a 224-bit security level.
 
