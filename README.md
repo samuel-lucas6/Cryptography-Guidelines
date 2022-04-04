@@ -326,6 +326,8 @@ So when should you use an AEAD? Exceptions to my Encrypt-then-MAC recommendation
 
 9. Chaining password hashing functions (e.g. `scrypt(PBKDF2(password))`): **this just reduces the strength of the stronger algorithm** since it means having worse parameters to get the same total delay.
 
+10. [Balloon hashing](https://en.wikipedia.org/wiki/Balloon_hashing): arguably better than Argon2 since it's [similar in strength](https://eprint.iacr.org/2016/759.pdf) whilst having a [more impressive design](https://youtu.be/7vs47CYnDsQ) (e.g. no separate variants, resistance to cache attacks, easy to implement with standard cryptographic hash functions, and performant). Unfortunately, it has seen virtually no adoption. There seems to be no information on recommended parameters, the reference implementation is [no longer maintained](https://github.com/henrycg/balloon/issues/5#issuecomment-616425762), there are no official test vectors, there's no RFC draft, and only a handful of people have implemented the algorithm, with it not being in any popular libraries. Therefore, just use Argon2, which has now been [standardised](https://datatracker.ietf.org/doc/html/rfc9106) and widely adopted.
+
 #### Notes:
 1. **Never hard-code passwords into source code**: these can be easily retrieved.
 
