@@ -6,6 +6,10 @@ This document outlines recommendations for cryptographic algorithm choices and p
 
 My goal with these guidelines is to provide a resource that I wish I had access to when I first started writing programs related to cryptography. If this information helps prevent even just one vulnerability, then I consider it time well spent.
 
+> **Note**
+> 
+> This document is currently being rewritten and split into individual pages. Please view the sections folder for the latest information.
+
 ## Acknowledgements
 These guidelines were inspired by [this](https://gist.github.com/atoponce/07d8d4c833873be2f68c34f9afc5a78a#file-gistfile1-md) Cryptographic Best Practices gist, Latacora's [Cryptographic Right Answers](https://latacora.singles/2018/04/03/cryptographic-right-answers.html), and [Crypto Gotchas](https://github.com/SalusaSecondus/CryptoGotchas), which is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). The difference is that I mention newer algorithms and have tried to justify my algorithm recommendations whilst also offering important notes about using them correctly.
 
